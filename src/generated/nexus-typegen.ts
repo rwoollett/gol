@@ -36,6 +36,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     taskId: number; // Int!
   }
+  BoardRowResult: { // root type
+    cols: string[]; // [String!]!
+    id: number; // Int!
+    taskResultId: number; // Int!
+  }
   Mutation: {};
   Query: {};
   Task: { // root type
@@ -44,6 +49,13 @@ export interface NexusGenObjects {
     length: number; // Int!
     row: number; // Int!
     rows: Array<NexusGenRootTypes['BoardRow'] | null>; // [BoardRow]!
+  }
+  TaskResult: { // root type
+    genId: string; // String!
+    id: number; // Int!
+    length: number; // Int!
+    row: number; // Int!
+    rows: Array<NexusGenRootTypes['BoardRowResult'] | null>; // [BoardRowResult]!
   }
 }
 
@@ -63,11 +75,18 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     taskId: number; // Int!
   }
+  BoardRowResult: { // field return type
+    cols: string[]; // [String!]!
+    id: number; // Int!
+    taskResultId: number; // Int!
+  }
   Mutation: { // field return type
     postTask: NexusGenRootTypes['Task']; // Task!
+    postTaskResult: NexusGenRootTypes['TaskResult']; // TaskResult!
   }
   Query: { // field return type
     getTaskByGenID: NexusGenRootTypes['Task'] | null; // Task
+    getTaskResultByGenID: NexusGenRootTypes['TaskResult'] | null; // TaskResult
   }
   Task: { // field return type
     genId: string; // String!
@@ -75,6 +94,13 @@ export interface NexusGenFieldTypes {
     length: number; // Int!
     row: number; // Int!
     rows: Array<NexusGenRootTypes['BoardRow'] | null>; // [BoardRow]!
+  }
+  TaskResult: { // field return type
+    genId: string; // String!
+    id: number; // Int!
+    length: number; // Int!
+    row: number; // Int!
+    rows: Array<NexusGenRootTypes['BoardRowResult'] | null>; // [BoardRowResult]!
   }
 }
 
@@ -84,11 +110,18 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     taskId: 'Int'
   }
+  BoardRowResult: { // field return type name
+    cols: 'String'
+    id: 'Int'
+    taskResultId: 'Int'
+  }
   Mutation: { // field return type name
     postTask: 'Task'
+    postTaskResult: 'TaskResult'
   }
   Query: { // field return type name
     getTaskByGenID: 'Task'
+    getTaskResultByGenID: 'TaskResult'
   }
   Task: { // field return type name
     genId: 'String'
@@ -96,6 +129,13 @@ export interface NexusGenFieldTypeNames {
     length: 'Int'
     row: 'Int'
     rows: 'BoardRow'
+  }
+  TaskResult: { // field return type name
+    genId: 'String'
+    id: 'Int'
+    length: 'Int'
+    row: 'Int'
+    rows: 'BoardRowResult'
   }
 }
 
@@ -107,9 +147,18 @@ export interface NexusGenArgTypes {
       row: number; // Int!
       rows: NexusGenInputs['BoardRowsInput']; // BoardRowsInput!
     }
+    postTaskResult: { // args
+      genId: string; // String!
+      length: number; // Int!
+      row: number; // Int!
+      rows: NexusGenInputs['BoardRowsInput']; // BoardRowsInput!
+    }
   }
   Query: {
     getTaskByGenID: { // args
+      genId: string; // String!
+    }
+    getTaskResultByGenID: { // args
       genId: string; // String!
     }
   }

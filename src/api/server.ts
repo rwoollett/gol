@@ -35,11 +35,6 @@ const redisOptions = {
   keepAlive: 1000,
 };
 
-// const publishClient = new Redis(redisOptions);
-// publishClient.on('error', (err) => console.log('Redis publish error', err));
-// const subscribeClient = new Redis(redisOptions);
-// subscribeClient.on('error', (err) => console.log('Redis subscribe error', err));
-
 const redisPubSub = new RedisPubSub({
   publisher: new Redis(redisOptions),
   subscriber: new Redis(redisOptions)

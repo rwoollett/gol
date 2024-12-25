@@ -42,6 +42,46 @@ export const getTaskByGenIDResolver: FieldResolver<
   };
 };
 
+export const getTaskResultByGenIDResolver: FieldResolver<
+  "Query",
+  "getTaskResultByGenID"
+> = async (_, { genId }, { prisma }) => {
+
+  try {
+    const taskResult = await prisma.taskResult.findFirst({
+      select: {
+        id: true,
+        genId: true,
+        row: true,
+        length: true,
+        rows: true
+      },
+      where:
+      {
+        genId: genId.toString()
+      }
+    });
+
+    return taskResult;
+
+  } catch (error) {
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code == 'P2025'
+    ) {
+      console.log(
+        '\u001b[1;31m' +
+        'PrismaClientKnownRequestError is catched' +
+        '(Error name: ' +
+        error.name +
+        ')' +
+        '\u001b[0m'
+      );
+    }
+    return null;
+  };
+};
+
 export const postTaskResolver: FieldResolver<
   "Mutation", "postTask"
 > = async (_, { genId, row, length, rows }, { prisma, pubsub }) => {
@@ -72,6 +112,38 @@ export const postTaskResolver: FieldResolver<
     rows: boardRows
   }
 };
+
+export const postTaskResultResolver: FieldResolver<
+  "Mutation", "postTaskResult"
+> = async (_, { genId, row, length, rows }, { prisma, pubsub }) => {
+
+  const newTaskResult = await prisma.taskResult.create({
+    data: {
+      genId,
+      row,
+      length,
+    }
+  });
+
+  const boardRowResults = rows.data.map(async (cols) => {
+    const boardRow = await prisma.boardRowResult.create({
+      data: {
+        taskResultId: newTaskResult.id,
+        cols: [...cols]
+      }
+    });
+    return boardRow;
+  });
+
+  return {
+    id: newTaskResult.id,
+    genId,
+    row,
+    length,
+    rows: boardRowResults
+  }
+};
+
 
 // export const connectClientCSResolver: FieldResolver<
 //   "Mutation", "connectClientCS"

@@ -10,7 +10,9 @@ import {
 import { extendType } from 'nexus'
 import {
    getTaskByGenIDResolver,
+   getTaskResultByGenIDResolver,
    postTaskResolver,
+   postTaskResultResolver,
  //  postTaskResolver
 } from '../resolvers/gol';
 // import {
@@ -51,6 +53,37 @@ export const BoardRow = objectType({
   description: "The columns in the GOL board row."
 })
 
+/**
+ * Task
+ */
+export const TaskResult = objectType({
+  name: 'TaskResult',
+  definition(t) {
+    t.nonNull.int('id')
+    t.nonNull.string('genId')
+    t.nonNull.int('row')
+    t.nonNull.int('length')
+    t.nonNull.list.field('rows', {
+      type: 'BoardRowResult',
+      description: "Subset of GOL rows in generation"
+    })
+  },
+  description: "Task Result of generating new cells in a subset of rows in GOL."
+});
+
+/**
+ * BoardRow
+ */
+export const BoardRowResult = objectType({
+  name: 'BoardRowResult',
+  definition(t) {
+    t.nonNull.int('id')
+    t.nonNull.int('taskResultId')
+    t.nonNull.list.nonNull.string('cols')
+  },
+  description: "The columns in the GOL board row."
+})
+
 export const BoardRowsInput = inputObjectType({
   name: 'BoardRowsInput',
   definition(t) {
@@ -69,6 +102,13 @@ export const GOLQuery = extendType({
       },
       resolve: getTaskByGenIDResolver
     });
+    t.field('getTaskResultByGenID', {
+      type: 'TaskResult',
+      args: {
+        genId: nonNull(stringArg())
+      },
+      resolve: getTaskResultByGenIDResolver
+    });
   },
 });
 
@@ -84,6 +124,16 @@ export const CSTokenMutations = extendType({
         rows: nonNull(BoardRowsInput)
       },
       resolve: postTaskResolver
+    });
+    t.nonNull.field('postTaskResult', {
+      type: 'TaskResult',
+      args: { 
+        genId: nonNull(stringArg()),
+        row: nonNull(intArg()),
+        length: nonNull(intArg()),
+        rows: nonNull(BoardRowsInput)
+      },
+      resolve: postTaskResultResolver
     });
   },
 })

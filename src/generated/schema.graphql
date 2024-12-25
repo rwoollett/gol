@@ -9,6 +9,13 @@ type BoardRow {
   taskId: Int!
 }
 
+"""The columns in the GOL board row."""
+type BoardRowResult {
+  cols: [String!]!
+  id: Int!
+  taskResultId: Int!
+}
+
 """A subset of rows from the whole GOL board where generate new cells"""
 input BoardRowsInput {
   data: [[String!]!]!
@@ -16,10 +23,12 @@ input BoardRowsInput {
 
 type Mutation {
   postTask(genId: String!, length: Int!, row: Int!, rows: BoardRowsInput!): Task!
+  postTaskResult(genId: String!, length: Int!, row: Int!, rows: BoardRowsInput!): TaskResult!
 }
 
 type Query {
   getTaskByGenID(genId: String!): Task
+  getTaskResultByGenID(genId: String!): TaskResult
 }
 
 """Task of generating new cells in a subset of rows in GOL."""
@@ -31,4 +40,15 @@ type Task {
 
   """Subset of GOL rows in generation"""
   rows: [BoardRow]!
+}
+
+"""Task Result of generating new cells in a subset of rows in GOL."""
+type TaskResult {
+  genId: String!
+  id: Int!
+  length: Int!
+  row: Int!
+
+  """Subset of GOL rows in generation"""
+  rows: [BoardRowResult]!
 }
