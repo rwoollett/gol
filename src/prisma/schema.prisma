@@ -7,43 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Client {
-  id             Int           @id @default(autoincrement())
-  ip             String        @unique @db.VarChar(50)
-  name           String
-  connected      Boolean       @default(false)
-  connectedAt    DateTime?      //@default(now())
-  disconnectedAt DateTime?      //@default(now())
-  processId      String?
-  parentIp       String        @unique @db.VarChar(50)
-  //AcquireCS     AcquireCS[]   @relation("acquire")
-  RequestParent  RequestParent @relation(fields: [parentIp], references: [clientIp])
-  //RequestCS     RequestCS[]   @relation("source")
+model Task {
+  id     Int        @id @default(autoincrement())
+  genId  String     @unique @db.VarChar(50)
+  row    Int        @default(-1)
+  length Int        @default(0)
+  rows   BoardRow[]
 }
 
-model RequestParent {
-  id       Int     @id @default(autoincrement())
-  clientIp String  @unique @db.VarChar(50)
-  //AcquireCS AcquireCS[] @relation("source")
-  Client   Client?
-  //RequestCS RequestCS[] @relation("parent")
+model BoardRow {
+  id     Int      @id @default(autoincrement())
+  cols   String[]
+  task   Task     @relation(fields: [taskId], references: [id])
+  taskId Int
 }
 
-// model RequestCS {
-//   id          Int           @id @default(autoincrement())
-//   requestedAt DateTime      @default(now())
-//   relayed     Boolean       @default(false)
-//   sourceIp    String
-//   parentIp    String
-//   parent      RequestParent @relation("parent", fields: [parentIp], references: [clientIp])
-//   source      Client        @relation("source", fields: [sourceIp], references: [ip])
-// }
+model TaskResult {
+  id     Int              @id @default(autoincrement())
+  genId  String           @unique @db.VarChar(50)
+  row    Int              @default(-1)
+  length Int              @default(0)
+  rows   BoardRowResult[]
+}
 
-// model AcquireCS {
-//   id         Int           @id @default(autoincrement())
-//   acquiredAt DateTime      @default(now())
-//   ip         String
-//   sourceIp   String
-//   client     Client        @relation("acquire", fields: [ip], references: [ip])
-//   source     RequestParent @relation("source", fields: [sourceIp], references: [clientIp])
-// }
+model BoardRowResult {
+  id           Int        @id @default(autoincrement())
+  cols         String[]
+  taskResult   TaskResult @relation(fields: [taskResultId], references: [id])
+  taskResultId Int
+}
