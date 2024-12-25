@@ -27,12 +27,14 @@ type Mutation {
 }
 
 type Query {
-  getTaskByGenID(genId: String!): Task
+  getNextTask: Task
   getTaskResultByGenID(genId: String!): TaskResult
 }
 
 """Task of generating new cells in a subset of rows in GOL."""
 type Task {
+  """When found with query getTaskByGenID as findFirst this is marked true."""
+  allocated: Boolean!
   genId: String!
   id: Int!
   length: Int!

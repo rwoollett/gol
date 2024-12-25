@@ -9,6 +9,7 @@ import {
 } from 'nexus';
 import { extendType } from 'nexus'
 import {
+  getNextTaskResolver,
    getTaskByGenIDResolver,
    getTaskResultByGenIDResolver,
    postTaskResolver,
@@ -32,6 +33,9 @@ export const Task = objectType({
     t.nonNull.string('genId')
     t.nonNull.int('row')
     t.nonNull.int('length')
+    t.nonNull.boolean('allocated', {
+      description: "When found with query getTaskByGenID as findFirst this is marked true."
+    })
     t.nonNull.list.field('rows', {
       type: 'BoardRow',
       description: "Subset of GOL rows in generation"
@@ -95,12 +99,9 @@ export const BoardRowsInput = inputObjectType({
 export const GOLQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.field('getTaskByGenID', {
+    t.field('getNextTask', {
       type: 'Task',
-      args: {
-        genId: nonNull(stringArg())
-      },
-      resolve: getTaskByGenIDResolver
+      resolve: getNextTaskResolver
     });
     t.field('getTaskResultByGenID', {
       type: 'TaskResult',

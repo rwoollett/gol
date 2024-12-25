@@ -44,6 +44,7 @@ export interface NexusGenObjects {
   Mutation: {};
   Query: {};
   Task: { // root type
+    allocated: boolean; // Boolean!
     genId: string; // String!
     id: number; // Int!
     length: number; // Int!
@@ -85,10 +86,11 @@ export interface NexusGenFieldTypes {
     postTaskResult: NexusGenRootTypes['TaskResult']; // TaskResult!
   }
   Query: { // field return type
-    getTaskByGenID: NexusGenRootTypes['Task'] | null; // Task
+    getNextTask: NexusGenRootTypes['Task'] | null; // Task
     getTaskResultByGenID: NexusGenRootTypes['TaskResult'] | null; // TaskResult
   }
   Task: { // field return type
+    allocated: boolean; // Boolean!
     genId: string; // String!
     id: number; // Int!
     length: number; // Int!
@@ -120,10 +122,11 @@ export interface NexusGenFieldTypeNames {
     postTaskResult: 'TaskResult'
   }
   Query: { // field return type name
-    getTaskByGenID: 'Task'
+    getNextTask: 'Task'
     getTaskResultByGenID: 'TaskResult'
   }
   Task: { // field return type name
+    allocated: 'Boolean'
     genId: 'String'
     id: 'Int'
     length: 'Int'
@@ -155,9 +158,6 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    getTaskByGenID: { // args
-      genId: string; // String!
-    }
     getTaskResultByGenID: { // args
       genId: string; // String!
     }

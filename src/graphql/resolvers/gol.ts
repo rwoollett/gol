@@ -2,10 +2,21 @@ import { eq } from "lodash";
 import { FieldResolver } from "nexus";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
-export const getTaskByGenIDResolver: FieldResolver<
+/**
+ * Get Task by generation id (genId)
+ * 
+ * Find the first task from a set of task with the genID and incremented row number.
+ * When retrieved the ack field is updated to true. This task does not need to be found 
+ * again. It will be processed by end user and posted back into TaskResult.
+ *  
+ * @param genId 
+ * @param prisma 
+ * @returns task 
+ */
+export const getNextTaskResolver: FieldResolver<
   "Query",
-  "getTaskByGenID"
-> = async (_, { genId }, { prisma }) => {
+  "getNextTask"
+> = async (_, {}, { prisma }) => {
 
   try {
     const task = await prisma.task.findFirst({
@@ -14,13 +25,25 @@ export const getTaskByGenIDResolver: FieldResolver<
         genId: true,
         row: true,
         length: true,
+        allocated: true,
         rows: true
       },
       where:
       {
-        genId: genId.toString()
+        allocated: false
       }
     });
+
+    if (task) {
+      await prisma.task.update({
+        data: {
+          allocated: true
+        },
+        where: {
+          id: task.id,
+        }
+      });
+    }
 
     return task;
 
@@ -109,6 +132,7 @@ export const postTaskResolver: FieldResolver<
     genId,
     row,
     length,
+    allocated: newTask.allocated,
     rows: boardRows
   }
 };

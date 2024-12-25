@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Task {
-  id     Int        @id @default(autoincrement())
-  genId  String     @db.VarChar(50)
-  row    Int        @default(-1)
-  length Int        @default(0)
-  rows   BoardRow[]
+  id        Int        @id @default(autoincrement())
+  genId     String     @db.VarChar(50)
+  row       Int        @default(-1)
+  length    Int        @default(0)
+  allocated Boolean    @default(false)
+  rows      BoardRow[]
 
   @@unique([genId, row], name: "rowInGeneration")
 }
