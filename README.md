@@ -1,37 +1,36 @@
-<h1 align="center">CSToken Service wit GraphQL</h1>
+<h1 align="center">Game of Life (GOL) Service with GraphQL</h1>
 
 <br />
-The CSToken GraphQL service uses Nexus schema and Prisma for the SQL database.
+The GOL GraphQL service uses Nexus schema and Prisma for the SQL database.
 
-The CSToken service holds the network ips available for client appplications
-to connect to so they can share resources with a CS token. 
-Once connected onto the CSToken service via an ip the application can use the 
-service to mutate the request and acquire events to notifiy when they get the CSToken.
-The client application is responsible for obtaining the CSToken with the other clients.
+The GOL service uses a Bulletin type of Database to holds tasks that are allocate to clients on 
+the network to complete and send back results.
+The mutations and updates to task with task result mutations is where the GOL board is made.
+It will be the client applications to perform the rules on the task they acquire.
+The client application is responsible for obtaining a CSToken and read notes under a critical section lock.
 
-The CSToken service is made to be used in a Web Dashboard application to be notified of the
-actions made to gain a CSToken. 
+The GOL service is made to be used in a Web application to display the board play for GOL.
 
 <br/>
 
-# Uses Docker Compose
+# To use with a Docker Compose system
 
 Make docker image in project root folder with: 
 ```
-docker build -t cstoken-dev:v1.0 -f Dockerfile .
+docker build -t gol-dev:v1.0 -f Dockerfile .
 ```
 
-The docker compose will run the docker image cstoken-dev:v1.0.
+The docker compose can run the docker image gol-dev:v1.0.
 Run docker compose with:
 ```
 docker-compose up
 ```
 
-The compose runtime will generate:
+The compose runtime will also need to generate:
 - Redis cache (used for pubsub of events for apollo subscriptions as consumer of published events)
 - PostGres database
-- Network for the images to be located
-- This CSToken qraphql service
+- Network for the images to be running on
+- The CSToken qraphql service (optional). The GOL board can be also be created with GOL mutations.
 
 ## Postgres database instance
 When running doocker-compose, the Postgres database can be pushed from the local Postgres database.
@@ -65,7 +64,7 @@ datasource db {
 ```
 
 # Generate code for CPP
-Applications written for accessing the CSToekn apollo query service in C++ can use CaffQL
+Applications written for accessing the GOL apollo query service in C++ can use CaffQL
 
 ## Use CaffQL to generate CPP code 
 Depends on the application CaffQL to be built in a separate folder.
@@ -80,7 +79,7 @@ cmake --build build-release --target all
 ## CaffQL command line: 
 Using the caffql in the cstoken project folder:
 ```
-../CaffQL/build-release/caffql --schema IntrospectionQuery.json --output GeneratedCode.hpp
+../CaffQL/build-release/caffql --schema IntrospectionQuery.json --output GOLService.hpp
 ```
 
 <br />
@@ -90,10 +89,6 @@ Using the caffql in the cstoken project folder:
 In the project directory, you can run:
 <br />
 
-## ⚡️ docker-compose up
-This requires docker and docker compose installed on your system.
-
-<br />
 
 ## ⚡️ dev
 
@@ -101,7 +96,7 @@ This requires docker and docker compose installed on your system.
 npm run dev
 ```
 
-The application depends on a local Postgres database and an instance of Rabbit MQ.
+The application depends on a local Postgres database and an instance of Reddis.
 If not present the dev command will error.
 
 Runs the app in the development mode.\
@@ -115,7 +110,7 @@ docker run --rm --name test-redis -p 6379:6379 redis:6.2-alpine redis-server --l
 ## Setup a Postgres for dev if not using docker-compose
 Use a docker container to ease setup of postgres.
 Sometimes users will have local postgres installed. It is not required and a docker container can be used.\
-An env variable like this required: DATABASE_URL="postgresql://postgres:password@localhost:5432/cstoken?schema=public"
+An env variable like this required: DATABASE_URL="postgresql://postgres:password@localhost:5432/gol?schema=public"
 
 Check the port for connection, "-p <local port>:<image instance exposed port>" in the run command below.\
 Usually 5432:5432 is always used. Postgres uses 5432 as the default exposed port in the running container.
@@ -186,9 +181,9 @@ This is the structure of the files in the project:
     │   ├── generated           # Apollo code generation of typedef and hooks from *.graphql files.
     │   ├── graphql             # GraphQL typedefs and reducers
     │   │   ├── resolvers       # Local schema resolvers for qraphql
-    │   │   │   └── cstoken.ts  # Service resolvers for apollo ql   
+    │   │   │   └── gol.ts      # Service resolvers for apollo ql   
     │   │   ├── types           # store's actions
-    │   │   │   ├── cstoken.ts  # Objects for Apollo QL. Uses prisma database objects for client inforation
+    │   │   │   ├── gol.ts      # Objects for Apollo QL. Uses prisma database objects for client inforation
     │   │   │   └── index.ts    # index for all typedefs (used in schema.ts)
     │   │   └── schema.ts       # Apollo Server local schema for CSToken service tables (Postgres database)
     │   ├── lib                 # Apollo client/server and Prisma client
@@ -203,7 +198,7 @@ This is the structure of the files in the project:
     ├── .gitignore
     ├── docker-compose.yml
     ├── Dockerfile
-    ├── IntrospectionQuery.graphql  # Introspection the CSToken service for JSON output
+    ├── GOLService.graphql  # Introspection the GOL graphql service for JSON output
     ├── jest-config.js
     ├── package.json
     ├── README.md
