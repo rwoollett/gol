@@ -14,9 +14,8 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  RangePort: { // input type
-    from: number; // Int!
-    to: number; // Int!
+  BoardRowsInput: { // input type
+    data: string[][]; // [[String!]!]!
   }
 }
 
@@ -32,44 +31,20 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
-  AcquireCS: { // root type
-    acquiredAt: string; // String!
-    ip: string; // String!
-    sourceIp: string; // String!
-  }
-  Client: { // root type
-    connected: boolean; // Boolean!
-    connectedAt: string; // String!
-    disconnectedAt: string; // String!
+  BoardRow: { // root type
+    cols: string[]; // [String!]!
     id: number; // Int!
-    ip: string; // String!
-    name: string; // String!
-    processId?: string | null; // String
-    requestParent: NexusGenRootTypes['RequestParent']; // RequestParent!
-  }
-  ConnectedClient: { // root type
-    connectedAt: string; // String!
-    processId: string; // String!
-    sourceIp: string; // String!
-  }
-  DisconnectedClient: { // root type
-    disconnectedAt: string; // String!
-    sourceIp: string; // String!
+    taskId: number; // Int!
   }
   Mutation: {};
   Query: {};
-  RequestCS: { // root type
-    originalIp: string; // String!
-    parentIp: string; // String!
-    relayed: boolean; // Boolean!
-    requestedAt: string; // String!
-    sourceIp: string; // String!
-  }
-  RequestParent: { // root type
-    clientIp: string; // String!
+  Task: { // root type
+    genId: string; // String!
     id: number; // Int!
+    length: number; // Int!
+    row: number; // Int!
+    rows: Array<NexusGenRootTypes['BoardRow'] | null>; // [BoardRow]!
   }
-  Subscription: {};
 }
 
 export interface NexusGenInterfaces {
@@ -83,149 +58,59 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
-  AcquireCS: { // field return type
-    acquiredAt: string; // String!
-    ip: string; // String!
-    sourceIp: string; // String!
-  }
-  Client: { // field return type
-    connected: boolean; // Boolean!
-    connectedAt: string; // String!
-    disconnectedAt: string; // String!
+  BoardRow: { // field return type
+    cols: string[]; // [String!]!
     id: number; // Int!
-    ip: string; // String!
-    name: string; // String!
-    processId: string | null; // String
-    requestParent: NexusGenRootTypes['RequestParent']; // RequestParent!
-  }
-  ConnectedClient: { // field return type
-    connectedAt: string; // String!
-    processId: string; // String!
-    sourceIp: string; // String!
-  }
-  DisconnectedClient: { // field return type
-    disconnectedAt: string; // String!
-    sourceIp: string; // String!
+    taskId: number; // Int!
   }
   Mutation: { // field return type
-    connectClientCS: NexusGenRootTypes['ConnectedClient']; // ConnectedClient!
-    createAcquireCS: NexusGenRootTypes['AcquireCS']; // AcquireCS!
-    createClient: NexusGenRootTypes['Client']; // Client!
-    createRequestCS: NexusGenRootTypes['RequestCS']; // RequestCS!
-    disconnectClientCS: NexusGenRootTypes['DisconnectedClient']; // DisconnectedClient!
+    postTask: NexusGenRootTypes['Task']; // Task!
   }
   Query: { // field return type
-    getClients: Array<NexusGenRootTypes['Client'] | null>; // [Client]!
+    getTaskByGenID: NexusGenRootTypes['Task'] | null; // Task
   }
-  RequestCS: { // field return type
-    originalIp: string; // String!
-    parentIp: string; // String!
-    relayed: boolean; // Boolean!
-    requestedAt: string; // String!
-    sourceIp: string; // String!
-  }
-  RequestParent: { // field return type
-    clientIp: string; // String!
+  Task: { // field return type
+    genId: string; // String!
     id: number; // Int!
-  }
-  Subscription: { // field return type
-    acquireCS_Created: NexusGenRootTypes['AcquireCS'] | null; // AcquireCS
-    clientCS_Connected: NexusGenRootTypes['ConnectedClient'] | null; // ConnectedClient
-    clientCS_Disconnected: NexusGenRootTypes['DisconnectedClient'] | null; // DisconnectedClient
-    requestCS_Created: NexusGenRootTypes['RequestCS'] | null; // RequestCS
+    length: number; // Int!
+    row: number; // Int!
+    rows: Array<NexusGenRootTypes['BoardRow'] | null>; // [BoardRow]!
   }
 }
 
 export interface NexusGenFieldTypeNames {
-  AcquireCS: { // field return type name
-    acquiredAt: 'String'
-    ip: 'String'
-    sourceIp: 'String'
-  }
-  Client: { // field return type name
-    connected: 'Boolean'
-    connectedAt: 'String'
-    disconnectedAt: 'String'
+  BoardRow: { // field return type name
+    cols: 'String'
     id: 'Int'
-    ip: 'String'
-    name: 'String'
-    processId: 'String'
-    requestParent: 'RequestParent'
-  }
-  ConnectedClient: { // field return type name
-    connectedAt: 'String'
-    processId: 'String'
-    sourceIp: 'String'
-  }
-  DisconnectedClient: { // field return type name
-    disconnectedAt: 'String'
-    sourceIp: 'String'
+    taskId: 'Int'
   }
   Mutation: { // field return type name
-    connectClientCS: 'ConnectedClient'
-    createAcquireCS: 'AcquireCS'
-    createClient: 'Client'
-    createRequestCS: 'RequestCS'
-    disconnectClientCS: 'DisconnectedClient'
+    postTask: 'Task'
   }
   Query: { // field return type name
-    getClients: 'Client'
+    getTaskByGenID: 'Task'
   }
-  RequestCS: { // field return type name
-    originalIp: 'String'
-    parentIp: 'String'
-    relayed: 'Boolean'
-    requestedAt: 'String'
-    sourceIp: 'String'
-  }
-  RequestParent: { // field return type name
-    clientIp: 'String'
+  Task: { // field return type name
+    genId: 'String'
     id: 'Int'
-  }
-  Subscription: { // field return type name
-    acquireCS_Created: 'AcquireCS'
-    clientCS_Connected: 'ConnectedClient'
-    clientCS_Disconnected: 'DisconnectedClient'
-    requestCS_Created: 'RequestCS'
+    length: 'Int'
+    row: 'Int'
+    rows: 'BoardRow'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    connectClientCS: { // args
-      processId: string; // String!
-      sourceIp: string; // String!
-    }
-    createAcquireCS: { // args
-      ip: string; // String!
-      sourceIp: string; // String!
-    }
-    createClient: { // args
-      connected: boolean; // Boolean!
-      ip: string; // String!
-      name: string; // String!
-    }
-    createRequestCS: { // args
-      originalIp: string; // String!
-      parentIp: string; // String!
-      relayed: boolean; // Boolean!
-      sourceIp: string; // String!
-    }
-    disconnectClientCS: { // args
-      sourceIp: string; // String!
+    postTask: { // args
+      genId: string; // String!
+      length: number; // Int!
+      row: number; // Int!
+      rows: NexusGenInputs['BoardRowsInput']; // BoardRowsInput!
     }
   }
   Query: {
-    getClients: { // args
-      range: NexusGenInputs['RangePort']; // RangePort!
-    }
-  }
-  Subscription: {
-    clientCS_Connected: { // args
-      sourceIp: string; // String!
-    }
-    clientCS_Disconnected: { // args
-      sourceIp: string; // String!
+    getTaskByGenID: { // args
+      genId: string; // String!
     }
   }
 }
