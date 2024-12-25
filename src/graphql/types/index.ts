@@ -1,1 +1,1 @@
-export * from './cstoken';
+export * from './gol';

@@ -18,7 +18,7 @@ import {
   subcribeAcquireCSResolver,
   disconnectClientCSResolver,
   subcribeDisconnectedCSResolver
-} from '../resolvers/cstoken';
+} from '../resolvers/gol';
 import {
   ClientCSConnectedEvent,
   ClientCSDisconnectedEvent,
