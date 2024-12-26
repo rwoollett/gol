@@ -12,7 +12,9 @@ import {
   getTaskResultByGenIDResolver,
   postTaskResolver,
   postTaskResultResolver,
-  removeTaskCompleteResolver
+  removeTaskCompleteResolver,
+  signinTMRoleResolver,
+  signoutTMRoleResolver
 } from '../resolvers/gol';
 // import {
 //   ClientCSConnectedEvent,
@@ -113,6 +115,15 @@ export const GOLQuery = extendType({
   },
 });
 
+export const TaskManagerRole = objectType({
+  name: 'TaskManagerRole',
+  definition(t) {
+    t.nonNull.boolean('granted')
+    t.nonNull.string('message')
+  },
+  description: "Task Manager role is allocated to one client to act as task creater for GOL generations."
+})
+
 export const RemovalResult = objectType({
   name: 'RemovalResult',
   definition(t) {
@@ -124,6 +135,14 @@ export const RemovalResult = objectType({
 export const GOLMutations = extendType({
   type: 'Mutation',
   definition(t) {
+    t.nonNull.field('signinTMRole', {
+      type: 'TaskManagerRole',
+      resolve: signinTMRoleResolver
+    });
+    t.nonNull.field('signoutTMRole', {
+      type: 'TaskManagerRole',
+      resolve: signoutTMRoleResolver
+    });
     t.nonNull.field('postTask', {
       type: 'Task',
       args: {

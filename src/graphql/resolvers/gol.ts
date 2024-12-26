@@ -2,6 +2,11 @@ import { FieldResolver } from "nexus";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 /**
+ * Task Manager role granted
+ */
+let TMRole = false;
+
+/**
  * Get Task by generation id (genId)
  * 
  * Find the first task from a set of task with the genID and incremented row number.
@@ -138,6 +143,10 @@ export const postTaskResolver: FieldResolver<
   "Mutation", "postTask"
 > = async (_, { genId, row, length, rows }, { prisma, pubsub }) => {
 
+  if (!TMRole) {
+    throw new Error("Task Manager role not granted");
+  }
+
   const newTask = await prisma.task.create({
     data: {
       genId,
@@ -217,9 +226,32 @@ export const removeTaskCompleteResolver: FieldResolver<
     }
   });
 
-  return { message: `Removed ${removeMany.count + removeManyResult.count} records succesfully`};
+  return { message: `Removed ${removeMany.count + removeManyResult.count} records succesfully` };
 };
 
+export const signinTMRoleResolver: FieldResolver<
+  "Mutation", "signinTMRole"
+> = async (_, { }, { }) => {
+
+  if (TMRole) {
+    return { granted: false, message: "Unsuccessfully granted to become task manager. You can become a task worker." }
+  } else {
+    TMRole = true;
+    return { granted: true, message: "Successfully granted to become task manager." };
+  }
+};
+
+export const signoutTMRoleResolver: FieldResolver<
+  "Mutation", "signoutTMRole"
+> = async (_, { }, { }) => {
+
+  if (TMRole) {
+    TMRole = false;
+    return { granted: false, message: "Successfully signed out from task manager role. Goodbye and please cleanup any task resouces created." }
+  } else {
+    return { granted: false, message: "Unsuccessful sign out. You are not the current task manager." };
+  }
+};
 
 // export const connectClientCSResolver: FieldResolver<
 //   "Mutation", "connectClientCS"

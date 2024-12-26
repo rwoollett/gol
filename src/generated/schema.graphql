@@ -27,6 +27,8 @@ type Mutation {
   postTask(genId: String!, length: Int!, row: Int!, rows: BoardRowsInput!): Task!
   postTaskResult(genId: String!, length: Int!, row: Int!, rows: BoardRowsInput!): TaskResult!
   removeTaskComplete(genId: String!): RemovalResult!
+  signinTMRole: TaskManagerRole!
+  signoutTMRole: TaskManagerRole!
 }
 
 type Query {
@@ -50,6 +52,14 @@ type Task {
 
   """Subset of GOL rows in generation"""
   rows: [BoardRow]!
+}
+
+"""
+Task Manager role is allocated to one client to act as task creater for GOL generations.
+"""
+type TaskManagerRole {
+  granted: Boolean!
+  message: String!
 }
 
 """Task Result of generating new cells in a subset of rows in GOL."""

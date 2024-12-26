@@ -56,6 +56,10 @@ export interface NexusGenObjects {
     row: number; // Int!
     rows: Array<NexusGenRootTypes['BoardRow'] | null>; // [BoardRow]!
   }
+  TaskManagerRole: { // root type
+    granted: boolean; // Boolean!
+    message: string; // String!
+  }
   TaskResult: { // root type
     genId: string; // String!
     id: number; // Int!
@@ -92,6 +96,8 @@ export interface NexusGenFieldTypes {
     postTask: NexusGenRootTypes['Task']; // Task!
     postTaskResult: NexusGenRootTypes['TaskResult']; // TaskResult!
     removeTaskComplete: NexusGenRootTypes['RemovalResult']; // RemovalResult!
+    signinTMRole: NexusGenRootTypes['TaskManagerRole']; // TaskManagerRole!
+    signoutTMRole: NexusGenRootTypes['TaskManagerRole']; // TaskManagerRole!
   }
   Query: { // field return type
     getNextTask: NexusGenRootTypes['Task'] | null; // Task
@@ -107,6 +113,10 @@ export interface NexusGenFieldTypes {
     length: number; // Int!
     row: number; // Int!
     rows: Array<NexusGenRootTypes['BoardRow'] | null>; // [BoardRow]!
+  }
+  TaskManagerRole: { // field return type
+    granted: boolean; // Boolean!
+    message: string; // String!
   }
   TaskResult: { // field return type
     genId: string; // String!
@@ -134,6 +144,8 @@ export interface NexusGenFieldTypeNames {
     postTask: 'Task'
     postTaskResult: 'TaskResult'
     removeTaskComplete: 'RemovalResult'
+    signinTMRole: 'TaskManagerRole'
+    signoutTMRole: 'TaskManagerRole'
   }
   Query: { // field return type name
     getNextTask: 'Task'
@@ -149,6 +161,10 @@ export interface NexusGenFieldTypeNames {
     length: 'Int'
     row: 'Int'
     rows: 'BoardRow'
+  }
+  TaskManagerRole: { // field return type name
+    granted: 'Boolean'
+    message: 'String'
   }
   TaskResult: { // field return type name
     genId: 'String'
