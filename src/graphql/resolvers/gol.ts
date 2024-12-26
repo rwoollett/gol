@@ -1,7 +1,5 @@
-import { eq, sortBy } from "lodash";
 import { FieldResolver } from "nexus";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { sortAndDeduplicateDiagnostics } from "typescript";
 
 /**
  * Get Task by generation id (genId)
@@ -149,7 +147,7 @@ export const postTaskResolver: FieldResolver<
   });
 
   const boardRows = rows.data.map(async (cols, index) => {
-    console.log('board row:',index, cols);
+
     const boardRow = await prisma.boardRow.create({
       data: {
         order: index,
@@ -200,6 +198,26 @@ export const postTaskResultResolver: FieldResolver<
     length,
     rows: boardRowResults
   }
+};
+
+export const removeTaskCompleteResolver: FieldResolver<
+  "Mutation", "removeTaskComplete"
+> = async (_, { genId }, { prisma }) => {
+
+  const removeMany = await prisma.task.deleteMany({
+    where: {
+      genId: genId,
+      allocated: true
+    }
+  });
+
+  const removeManyResult = await prisma.taskResult.deleteMany({
+    where: {
+      genId: genId
+    }
+  });
+
+  return { message: `Removed ${removeMany.count + removeManyResult.count} records succesfully`};
 };
 
 

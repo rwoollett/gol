@@ -26,11 +26,17 @@ input BoardRowsInput {
 type Mutation {
   postTask(genId: String!, length: Int!, row: Int!, rows: BoardRowsInput!): Task!
   postTaskResult(genId: String!, length: Int!, row: Int!, rows: BoardRowsInput!): TaskResult!
+  removeTaskComplete(genId: String!): RemovalResult!
 }
 
 type Query {
   getNextTask: Task
   getTaskResultByGenID(genId: String!): [TaskResult]
+}
+
+"""Removal result."""
+type RemovalResult {
+  message: String!
 }
 
 """Task of generating new cells in a subset of rows in GOL."""

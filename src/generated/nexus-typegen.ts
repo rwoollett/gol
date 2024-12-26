@@ -45,6 +45,9 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  RemovalResult: { // root type
+    message: string; // String!
+  }
   Task: { // root type
     allocated: boolean; // Boolean!
     genId: string; // String!
@@ -88,10 +91,14 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     postTask: NexusGenRootTypes['Task']; // Task!
     postTaskResult: NexusGenRootTypes['TaskResult']; // TaskResult!
+    removeTaskComplete: NexusGenRootTypes['RemovalResult']; // RemovalResult!
   }
   Query: { // field return type
     getNextTask: NexusGenRootTypes['Task'] | null; // Task
     getTaskResultByGenID: Array<NexusGenRootTypes['TaskResult'] | null> | null; // [TaskResult]
+  }
+  RemovalResult: { // field return type
+    message: string; // String!
   }
   Task: { // field return type
     allocated: boolean; // Boolean!
@@ -126,10 +133,14 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     postTask: 'Task'
     postTaskResult: 'TaskResult'
+    removeTaskComplete: 'RemovalResult'
   }
   Query: { // field return type name
     getNextTask: 'Task'
     getTaskResultByGenID: 'TaskResult'
+  }
+  RemovalResult: { // field return type name
+    message: 'String'
   }
   Task: { // field return type name
     allocated: 'Boolean'
@@ -161,6 +172,9 @@ export interface NexusGenArgTypes {
       length: number; // Int!
       row: number; // Int!
       rows: NexusGenInputs['BoardRowsInput']; // BoardRowsInput!
+    }
+    removeTaskComplete: { // args
+      genId: string; // String!
     }
   }
   Query: {

@@ -11,7 +11,8 @@ import {
   getNextTaskResolver,
   getTaskResultByGenIDResolver,
   postTaskResolver,
-  postTaskResultResolver
+  postTaskResultResolver,
+  removeTaskCompleteResolver
 } from '../resolvers/gol';
 // import {
 //   ClientCSConnectedEvent,
@@ -112,7 +113,15 @@ export const GOLQuery = extendType({
   },
 });
 
-export const CSTokenMutations = extendType({
+export const RemovalResult = objectType({
+  name: 'RemovalResult',
+  definition(t) {
+    t.nonNull.string('message')
+  },
+  description: "Removal result."
+})
+
+export const GOLMutations = extendType({
   type: 'Mutation',
   definition(t) {
     t.nonNull.field('postTask', {
@@ -134,6 +143,13 @@ export const CSTokenMutations = extendType({
         rows: nonNull(BoardRowsInput)
       },
       resolve: postTaskResultResolver
+    });
+    t.nonNull.field('removeTaskComplete', {
+      type: 'RemovalResult',
+      args: {
+        genId: nonNull(stringArg())
+      },
+      resolve: removeTaskCompleteResolver
     });
   },
 })

@@ -22,7 +22,7 @@ model BoardRow {
   id     Int      @id @default(autoincrement())
   order  Int      @default(0)
   cols   String[]
-  task   Task     @relation(fields: [taskId], references: [id])
+  task   Task     @relation(fields: [taskId], references: [id], onDelete: Cascade) 
   taskId Int
 }
 
@@ -40,6 +40,6 @@ model BoardRowResult {
   id           Int        @id @default(autoincrement())
   order        Int        @default(0)
   cols         String[]
-  taskResult   TaskResult @relation(fields: [taskResultId], references: [id])
+  taskResult   TaskResult @relation(fields: [taskResultId], references: [id], onDelete: Cascade)
   taskResultId Int
 }
