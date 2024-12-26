@@ -120,6 +120,8 @@ export const TaskManagerRole = objectType({
   definition(t) {
     t.nonNull.boolean('granted')
     t.nonNull.string('message')
+    t.nonNull.string('nodeId')
+    t.nonNull.string('nodeName')
   },
   description: "Task Manager role is allocated to one client to act as task creater for GOL generations."
 })
@@ -137,10 +139,17 @@ export const GOLMutations = extendType({
   definition(t) {
     t.nonNull.field('signinTMRole', {
       type: 'TaskManagerRole',
+      args: {
+        nodeId: nonNull(stringArg()),
+        nodeName: nonNull(stringArg())
+      },
       resolve: signinTMRoleResolver
     });
     t.nonNull.field('signoutTMRole', {
       type: 'TaskManagerRole',
+      args: {
+        nodeId: nonNull(stringArg()),
+      },
       resolve: signoutTMRoleResolver
     });
     t.nonNull.field('postTask', {

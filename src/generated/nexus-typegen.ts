@@ -59,6 +59,8 @@ export interface NexusGenObjects {
   TaskManagerRole: { // root type
     granted: boolean; // Boolean!
     message: string; // String!
+    nodeId: string; // String!
+    nodeName: string; // String!
   }
   TaskResult: { // root type
     genId: string; // String!
@@ -117,6 +119,8 @@ export interface NexusGenFieldTypes {
   TaskManagerRole: { // field return type
     granted: boolean; // Boolean!
     message: string; // String!
+    nodeId: string; // String!
+    nodeName: string; // String!
   }
   TaskResult: { // field return type
     genId: string; // String!
@@ -165,6 +169,8 @@ export interface NexusGenFieldTypeNames {
   TaskManagerRole: { // field return type name
     granted: 'Boolean'
     message: 'String'
+    nodeId: 'String'
+    nodeName: 'String'
   }
   TaskResult: { // field return type name
     genId: 'String'
@@ -191,6 +197,13 @@ export interface NexusGenArgTypes {
     }
     removeTaskComplete: { // args
       genId: string; // String!
+    }
+    signinTMRole: { // args
+      nodeId: string; // String!
+      nodeName: string; // String!
+    }
+    signoutTMRole: { // args
+      nodeId: string; // String!
     }
   }
   Query: {

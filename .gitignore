@@ -13,7 +13,7 @@ cstoken.env
 compose.env
 IntrospectionQuery.*
 !IntrospectionQuery.graphql
-GeneratedCode.hpp
+GOLService.hpp
 
 # testing
 tmp.html

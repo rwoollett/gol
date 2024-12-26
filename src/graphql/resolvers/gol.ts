@@ -231,25 +231,37 @@ export const removeTaskCompleteResolver: FieldResolver<
 
 export const signinTMRoleResolver: FieldResolver<
   "Mutation", "signinTMRole"
-> = async (_, { }, { }) => {
+> = async (_, { nodeId, nodeName }, { }) => {
 
   if (TMRole) {
-    return { granted: false, message: "Unsuccessfully granted to become task manager. You can become a task worker." }
+    return {
+      granted: false, message: "Unsuccessfully granted to become task manager. You can become a task worker.",
+      nodeId, nodeName
+    }
   } else {
     TMRole = true;
-    return { granted: true, message: "Successfully granted to become task manager." };
+    return {
+      granted: true, message: "Successfully granted to become task manager.",
+      nodeId, nodeName
+    };
   }
 };
 
 export const signoutTMRoleResolver: FieldResolver<
   "Mutation", "signoutTMRole"
-> = async (_, { }, { }) => {
+> = async (_, { nodeId }, { }) => {
 
   if (TMRole) {
     TMRole = false;
-    return { granted: false, message: "Successfully signed out from task manager role. Goodbye and please cleanup any task resouces created." }
+    return {
+      granted: false, message: "Successfully signed out from task manager role. Goodbye and please cleanup any task resouces created.",
+      nodeId, nodeName: ""
+    }
   } else {
-    return { granted: false, message: "Unsuccessful sign out. You are not the current task manager." };
+    return {
+      granted: false, message: "Unsuccessful sign out. You are not the current task manager.",
+      nodeId, nodeName: ""
+    };
   }
 };
 

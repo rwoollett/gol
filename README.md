@@ -79,7 +79,7 @@ cmake --build build-release --target all
 ## CaffQL command line: 
 Using the caffql in the cstoken project folder:
 ```
-../CaffQL/build-release/caffql --schema IntrospectionQuery.json --output GOLService.hpp
+../CaffQL/build-release/caffql --schema IntrospectionQuery.json --output GOLService.hpp --namespace golql
 ```
 
 <br />
