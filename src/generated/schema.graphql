@@ -6,6 +6,7 @@
 type BoardRow {
   cols: [String!]!
   id: Int!
+  order: Int!
   taskId: Int!
 }
 
@@ -13,6 +14,7 @@ type BoardRow {
 type BoardRowResult {
   cols: [String!]!
   id: Int!
+  order: Int!
   taskResultId: Int!
 }
 
@@ -28,12 +30,12 @@ type Mutation {
 
 type Query {
   getNextTask: Task
-  getTaskResultByGenID(genId: String!): TaskResult
+  getTaskResultByGenID(genId: String!): [TaskResult]
 }
 
 """Task of generating new cells in a subset of rows in GOL."""
 type Task {
-  """When found with query getTaskByGenID as findFirst this is marked true."""
+  """When found with query getNextTask as findFirst this is marked true."""
   allocated: Boolean!
   genId: String!
   id: Int!

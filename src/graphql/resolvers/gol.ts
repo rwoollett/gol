@@ -1,6 +1,7 @@
-import { eq } from "lodash";
+import { eq, sortBy } from "lodash";
 import { FieldResolver } from "nexus";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { sortAndDeduplicateDiagnostics } from "typescript";
 
 /**
  * Get Task by generation id (genId)
@@ -16,7 +17,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 export const getNextTaskResolver: FieldResolver<
   "Query",
   "getNextTask"
-> = async (_, {}, { prisma }) => {
+> = async (_, { }, { prisma }) => {
 
   try {
     const task = await prisma.task.findFirst({
@@ -26,12 +27,27 @@ export const getNextTaskResolver: FieldResolver<
         row: true,
         length: true,
         allocated: true,
-        rows: true
+        rows: {
+          select: {
+            id: true,
+            order: true,
+            taskId: true,
+            cols: true
+          },
+          orderBy: {
+            order: 'asc'
+          }
+        }
       },
       where:
       {
         allocated: false
-      }
+      },
+      orderBy: [
+        {
+          row: 'asc'
+        }
+      ]
     });
 
     if (task) {
@@ -71,18 +87,33 @@ export const getTaskResultByGenIDResolver: FieldResolver<
 > = async (_, { genId }, { prisma }) => {
 
   try {
-    const taskResult = await prisma.taskResult.findFirst({
+    const taskResult = await prisma.taskResult.findMany({
       select: {
         id: true,
         genId: true,
         row: true,
         length: true,
-        rows: true
+        rows: {
+          select: {
+            id: true,
+            order: true,
+            taskResultId: true,
+            cols: true
+          },
+          orderBy: {
+            order: 'asc'
+          }
+        }
       },
       where:
       {
         genId: genId.toString()
-      }
+      },
+      orderBy: [
+        {
+          row: 'asc'
+        }
+      ]
     });
 
     return taskResult;
@@ -117,9 +148,11 @@ export const postTaskResolver: FieldResolver<
     }
   });
 
-  const boardRows = rows.data.map(async (cols) => {
+  const boardRows = rows.data.map(async (cols, index) => {
+    console.log('board row:',index, cols);
     const boardRow = await prisma.boardRow.create({
       data: {
+        order: index,
         taskId: newTask.id,
         cols: [...cols]
       }
@@ -149,9 +182,10 @@ export const postTaskResultResolver: FieldResolver<
     }
   });
 
-  const boardRowResults = rows.data.map(async (cols) => {
+  const boardRowResults = rows.data.map(async (cols, index) => {
     const boardRow = await prisma.boardRowResult.create({
       data: {
+        order: index,
         taskResultId: newTaskResult.id,
         cols: [...cols]
       }

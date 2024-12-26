@@ -1,5 +1,4 @@
 import {
-  booleanArg,
   inputObjectType,
   intArg,
   list,
@@ -10,11 +9,9 @@ import {
 import { extendType } from 'nexus'
 import {
   getNextTaskResolver,
-   getTaskByGenIDResolver,
-   getTaskResultByGenIDResolver,
-   postTaskResolver,
-   postTaskResultResolver,
- //  postTaskResolver
+  getTaskResultByGenIDResolver,
+  postTaskResolver,
+  postTaskResultResolver
 } from '../resolvers/gol';
 // import {
 //   ClientCSConnectedEvent,
@@ -34,7 +31,7 @@ export const Task = objectType({
     t.nonNull.int('row')
     t.nonNull.int('length')
     t.nonNull.boolean('allocated', {
-      description: "When found with query getTaskByGenID as findFirst this is marked true."
+      description: "When found with query getNextTask as findFirst this is marked true."
     })
     t.nonNull.list.field('rows', {
       type: 'BoardRow',
@@ -51,6 +48,7 @@ export const BoardRow = objectType({
   name: 'BoardRow',
   definition(t) {
     t.nonNull.int('id')
+    t.nonNull.int('order')
     t.nonNull.int('taskId')
     t.nonNull.list.nonNull.string('cols')
   },
@@ -82,6 +80,7 @@ export const BoardRowResult = objectType({
   name: 'BoardRowResult',
   definition(t) {
     t.nonNull.int('id')
+    t.nonNull.int('order')
     t.nonNull.int('taskResultId')
     t.nonNull.list.nonNull.string('cols')
   },
@@ -104,7 +103,7 @@ export const GOLQuery = extendType({
       resolve: getNextTaskResolver
     });
     t.field('getTaskResultByGenID', {
-      type: 'TaskResult',
+      type: list('TaskResult'),
       args: {
         genId: nonNull(stringArg())
       },
@@ -118,7 +117,7 @@ export const CSTokenMutations = extendType({
   definition(t) {
     t.nonNull.field('postTask', {
       type: 'Task',
-      args: { 
+      args: {
         genId: nonNull(stringArg()),
         row: nonNull(intArg()),
         length: nonNull(intArg()),
@@ -128,7 +127,7 @@ export const CSTokenMutations = extendType({
     });
     t.nonNull.field('postTaskResult', {
       type: 'TaskResult',
-      args: { 
+      args: {
         genId: nonNull(stringArg()),
         row: nonNull(intArg()),
         length: nonNull(intArg()),

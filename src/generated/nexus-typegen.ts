@@ -34,11 +34,13 @@ export interface NexusGenObjects {
   BoardRow: { // root type
     cols: string[]; // [String!]!
     id: number; // Int!
+    order: number; // Int!
     taskId: number; // Int!
   }
   BoardRowResult: { // root type
     cols: string[]; // [String!]!
     id: number; // Int!
+    order: number; // Int!
     taskResultId: number; // Int!
   }
   Mutation: {};
@@ -74,11 +76,13 @@ export interface NexusGenFieldTypes {
   BoardRow: { // field return type
     cols: string[]; // [String!]!
     id: number; // Int!
+    order: number; // Int!
     taskId: number; // Int!
   }
   BoardRowResult: { // field return type
     cols: string[]; // [String!]!
     id: number; // Int!
+    order: number; // Int!
     taskResultId: number; // Int!
   }
   Mutation: { // field return type
@@ -87,7 +91,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     getNextTask: NexusGenRootTypes['Task'] | null; // Task
-    getTaskResultByGenID: NexusGenRootTypes['TaskResult'] | null; // TaskResult
+    getTaskResultByGenID: Array<NexusGenRootTypes['TaskResult'] | null> | null; // [TaskResult]
   }
   Task: { // field return type
     allocated: boolean; // Boolean!
@@ -110,11 +114,13 @@ export interface NexusGenFieldTypeNames {
   BoardRow: { // field return type name
     cols: 'String'
     id: 'Int'
+    order: 'Int'
     taskId: 'Int'
   }
   BoardRowResult: { // field return type name
     cols: 'String'
     id: 'Int'
+    order: 'Int'
     taskResultId: 'Int'
   }
   Mutation: { // field return type name
