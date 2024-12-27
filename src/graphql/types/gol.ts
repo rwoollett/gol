@@ -34,7 +34,7 @@ export const Task = objectType({
   name: 'Task',
   definition(t) {
     t.nonNull.int('id')
-    t.nonNull.string('genId')
+    t.nonNull.int('genId')
     t.nonNull.int('row')
     t.nonNull.int('length')
     t.nonNull.boolean('allocated', {
@@ -57,7 +57,7 @@ export const BoardRow = objectType({
     t.nonNull.int('id')
     t.nonNull.int('order')
     t.nonNull.int('taskId')
-    t.nonNull.list.nonNull.string('cols')
+    t.nonNull.list.nonNull.int('cols')
   },
   description: "The columns in the GOL board row."
 })
@@ -69,7 +69,7 @@ export const TaskResult = objectType({
   name: 'TaskResult',
   definition(t) {
     t.nonNull.int('id')
-    t.nonNull.string('genId')
+    t.nonNull.int('genId')
     t.nonNull.int('row')
     t.nonNull.int('length')
     t.nonNull.list.field('rows', {
@@ -89,7 +89,7 @@ export const BoardRowResult = objectType({
     t.nonNull.int('id')
     t.nonNull.int('order')
     t.nonNull.int('taskResultId')
-    t.nonNull.list.nonNull.string('cols')
+    t.nonNull.list.nonNull.int('cols')
   },
   description: "The columns in the GOL board row."
 })
@@ -97,7 +97,7 @@ export const BoardRowResult = objectType({
 export const BoardRowsInput = inputObjectType({
   name: 'BoardRowsInput',
   definition(t) {
-    t.nonNull.list.nonNull.list.nonNull.string('data')
+    t.nonNull.list.nonNull.list.nonNull.int('data')
   },
   description: "A subset of rows, or the complete rows from the GOL board for one generate."
 });
@@ -105,10 +105,10 @@ export const BoardRowsInput = inputObjectType({
 export const BoardOutput = objectType({
   name: 'BoardOutput',
   definition(t) {
-    t.nonNull.string('genId')
+    t.nonNull.int('genId')
     t.nonNull.int('rows')
     t.nonNull.int('cols')
-    t.nonNull.list.nonNull.list.nonNull.string('board')
+    t.nonNull.list.nonNull.list.nonNull.int('board')
   },
   description: "A subset of rows, or the complete rows from the GOL board for one generate."
 });
@@ -123,14 +123,14 @@ export const GOLQuery = extendType({
     t.field('getTaskResultByGenID', {
       type: list('TaskResult'),
       args: {
-        genId: nonNull(stringArg())
+        genId: nonNull(intArg())
       },
       resolve: getTaskResultByGenIDResolver
     });
     t.field('countTaskResultByGenID', {
       type: 'Int',
       args: {
-        genId: nonNull(stringArg())
+        genId: nonNull(intArg())
       },
       resolve: countTaskResultByGenIDResolver
     });
@@ -177,7 +177,7 @@ export const GOLMutations = extendType({
     t.nonNull.field('postTask', {
       type: 'Task',
       args: {
-        genId: nonNull(stringArg()),
+        genId: nonNull(intArg()),
         row: nonNull(intArg()),
         length: nonNull(intArg()),
         rows: nonNull(BoardRowsInput)
@@ -187,7 +187,7 @@ export const GOLMutations = extendType({
     t.nonNull.field('postTaskResult', {
       type: 'TaskResult',
       args: {
-        genId: nonNull(stringArg()),
+        genId: nonNull(intArg()),
         row: nonNull(intArg()),
         length: nonNull(intArg()),
         rows: nonNull(BoardRowsInput)
@@ -197,14 +197,14 @@ export const GOLMutations = extendType({
     t.nonNull.field('removeTaskComplete', {
       type: 'RemovalResult',
       args: {
-        genId: nonNull(stringArg())
+        genId: nonNull(intArg())
       },
       resolve: removeTaskCompleteResolver
     });
     t.nonNull.field('postBoardByGenID', {
       type: 'BoardOutput',
       args: {
-        genId: nonNull(stringArg()),
+        genId: nonNull(intArg()),
         rows: nonNull(intArg()),
         cols: nonNull(intArg()),
         board: nonNull(BoardRowsInput)

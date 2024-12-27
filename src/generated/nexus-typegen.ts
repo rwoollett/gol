@@ -15,7 +15,7 @@ declare global {
 
 export interface NexusGenInputs {
   BoardRowsInput: { // input type
-    data: string[][]; // [[String!]!]!
+    data: number[][]; // [[Int!]!]!
   }
 }
 
@@ -32,19 +32,19 @@ export interface NexusGenScalars {
 
 export interface NexusGenObjects {
   BoardOutput: { // root type
-    board: string[][]; // [[String!]!]!
+    board: number[][]; // [[Int!]!]!
     cols: number; // Int!
-    genId: string; // String!
+    genId: number; // Int!
     rows: number; // Int!
   }
   BoardRow: { // root type
-    cols: string[]; // [String!]!
+    cols: number[]; // [Int!]!
     id: number; // Int!
     order: number; // Int!
     taskId: number; // Int!
   }
   BoardRowResult: { // root type
-    cols: string[]; // [String!]!
+    cols: number[]; // [Int!]!
     id: number; // Int!
     order: number; // Int!
     taskResultId: number; // Int!
@@ -57,7 +57,7 @@ export interface NexusGenObjects {
   Subscription: {};
   Task: { // root type
     allocated: boolean; // Boolean!
-    genId: string; // String!
+    genId: number; // Int!
     id: number; // Int!
     length: number; // Int!
     row: number; // Int!
@@ -70,7 +70,7 @@ export interface NexusGenObjects {
     nodeName: string; // String!
   }
   TaskResult: { // root type
-    genId: string; // String!
+    genId: number; // Int!
     id: number; // Int!
     length: number; // Int!
     row: number; // Int!
@@ -90,19 +90,19 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   BoardOutput: { // field return type
-    board: string[][]; // [[String!]!]!
+    board: number[][]; // [[Int!]!]!
     cols: number; // Int!
-    genId: string; // String!
+    genId: number; // Int!
     rows: number; // Int!
   }
   BoardRow: { // field return type
-    cols: string[]; // [String!]!
+    cols: number[]; // [Int!]!
     id: number; // Int!
     order: number; // Int!
     taskId: number; // Int!
   }
   BoardRowResult: { // field return type
-    cols: string[]; // [String!]!
+    cols: number[]; // [Int!]!
     id: number; // Int!
     order: number; // Int!
     taskResultId: number; // Int!
@@ -128,7 +128,7 @@ export interface NexusGenFieldTypes {
   }
   Task: { // field return type
     allocated: boolean; // Boolean!
-    genId: string; // String!
+    genId: number; // Int!
     id: number; // Int!
     length: number; // Int!
     row: number; // Int!
@@ -141,7 +141,7 @@ export interface NexusGenFieldTypes {
     nodeName: string; // String!
   }
   TaskResult: { // field return type
-    genId: string; // String!
+    genId: number; // Int!
     id: number; // Int!
     length: number; // Int!
     row: number; // Int!
@@ -151,19 +151,19 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenFieldTypeNames {
   BoardOutput: { // field return type name
-    board: 'String'
+    board: 'Int'
     cols: 'Int'
-    genId: 'String'
+    genId: 'Int'
     rows: 'Int'
   }
   BoardRow: { // field return type name
-    cols: 'String'
+    cols: 'Int'
     id: 'Int'
     order: 'Int'
     taskId: 'Int'
   }
   BoardRowResult: { // field return type name
-    cols: 'String'
+    cols: 'Int'
     id: 'Int'
     order: 'Int'
     taskResultId: 'Int'
@@ -189,7 +189,7 @@ export interface NexusGenFieldTypeNames {
   }
   Task: { // field return type name
     allocated: 'Boolean'
-    genId: 'String'
+    genId: 'Int'
     id: 'Int'
     length: 'Int'
     row: 'Int'
@@ -202,7 +202,7 @@ export interface NexusGenFieldTypeNames {
     nodeName: 'String'
   }
   TaskResult: { // field return type name
-    genId: 'String'
+    genId: 'Int'
     id: 'Int'
     length: 'Int'
     row: 'Int'
@@ -215,23 +215,23 @@ export interface NexusGenArgTypes {
     postBoardByGenID: { // args
       board: NexusGenInputs['BoardRowsInput']; // BoardRowsInput!
       cols: number; // Int!
-      genId: string; // String!
+      genId: number; // Int!
       rows: number; // Int!
     }
     postTask: { // args
-      genId: string; // String!
+      genId: number; // Int!
       length: number; // Int!
       row: number; // Int!
       rows: NexusGenInputs['BoardRowsInput']; // BoardRowsInput!
     }
     postTaskResult: { // args
-      genId: string; // String!
+      genId: number; // Int!
       length: number; // Int!
       row: number; // Int!
       rows: NexusGenInputs['BoardRowsInput']; // BoardRowsInput!
     }
     removeTaskComplete: { // args
-      genId: string; // String!
+      genId: number; // Int!
     }
     signinTMRole: { // args
       nodeId: string; // String!
@@ -243,10 +243,10 @@ export interface NexusGenArgTypes {
   }
   Query: {
     countTaskResultByGenID: { // args
-      genId: string; // String!
+      genId: number; // Int!
     }
     getTaskResultByGenID: { // args
-      genId: string; // String!
+      genId: number; // Int!
     }
   }
 }

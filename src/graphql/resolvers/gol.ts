@@ -112,7 +112,7 @@ export const getTaskResultByGenIDResolver: FieldResolver<
       },
       where:
       {
-        genId: genId.toString()
+        genId: genId
       },
       orderBy: [
         {
@@ -150,7 +150,7 @@ export const countTaskResultByGenIDResolver: FieldResolver<
     const taskResult = await prisma.taskResult.findMany({
       where:
       {
-        genId: genId.toString()
+        genId: genId
       }
     });
 

@@ -6,15 +6,15 @@
 A subset of rows, or the complete rows from the GOL board for one generate.
 """
 type BoardOutput {
-  board: [[String!]!]!
+  board: [[Int!]!]!
   cols: Int!
-  genId: String!
+  genId: Int!
   rows: Int!
 }
 
 """The columns in the GOL board row."""
 type BoardRow {
-  cols: [String!]!
+  cols: [Int!]!
   id: Int!
   order: Int!
   taskId: Int!
@@ -22,7 +22,7 @@ type BoardRow {
 
 """The columns in the GOL board row."""
 type BoardRowResult {
-  cols: [String!]!
+  cols: [Int!]!
   id: Int!
   order: Int!
   taskResultId: Int!
@@ -32,22 +32,22 @@ type BoardRowResult {
 A subset of rows, or the complete rows from the GOL board for one generate.
 """
 input BoardRowsInput {
-  data: [[String!]!]!
+  data: [[Int!]!]!
 }
 
 type Mutation {
-  postBoardByGenID(board: BoardRowsInput!, cols: Int!, genId: String!, rows: Int!): BoardOutput!
-  postTask(genId: String!, length: Int!, row: Int!, rows: BoardRowsInput!): Task!
-  postTaskResult(genId: String!, length: Int!, row: Int!, rows: BoardRowsInput!): TaskResult!
-  removeTaskComplete(genId: String!): RemovalResult!
+  postBoardByGenID(board: BoardRowsInput!, cols: Int!, genId: Int!, rows: Int!): BoardOutput!
+  postTask(genId: Int!, length: Int!, row: Int!, rows: BoardRowsInput!): Task!
+  postTaskResult(genId: Int!, length: Int!, row: Int!, rows: BoardRowsInput!): TaskResult!
+  removeTaskComplete(genId: Int!): RemovalResult!
   signinTMRole(nodeId: String!, nodeName: String!): TaskManagerRole!
   signoutTMRole(nodeId: String!): TaskManagerRole!
 }
 
 type Query {
-  countTaskResultByGenID(genId: String!): Int
+  countTaskResultByGenID(genId: Int!): Int
   getNextTask: Task
-  getTaskResultByGenID(genId: String!): [TaskResult]
+  getTaskResultByGenID(genId: Int!): [TaskResult]
 }
 
 """Removal result."""
@@ -63,7 +63,7 @@ type Subscription {
 type Task {
   """When found with query getNextTask as findFirst this is marked true."""
   allocated: Boolean!
-  genId: String!
+  genId: Int!
   id: Int!
   length: Int!
   row: Int!
@@ -84,7 +84,7 @@ type TaskManagerRole {
 
 """Task Result of generating new cells in a subset of rows in GOL."""
 type TaskResult {
-  genId: String!
+  genId: Int!
   id: Int!
   length: Int!
   row: Int!
