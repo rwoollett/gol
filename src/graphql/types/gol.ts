@@ -8,14 +8,18 @@ import {
 } from 'nexus';
 import { extendType } from 'nexus'
 import {
+  countTaskResultByGenIDResolver,
   getNextTaskResolver,
   getTaskResultByGenIDResolver,
+  postBoardByGenIDResolver,
   postTaskResolver,
   postTaskResultResolver,
   removeTaskCompleteResolver,
   signinTMRoleResolver,
-  signoutTMRoleResolver
+  signoutTMRoleResolver,
+  subcribeBoardGenerateResolver
 } from '../resolvers/gol';
+import { Subjects } from '../../events';
 // import {
 //   ClientCSConnectedEvent,
 //   ClientCSDisconnectedEvent,
@@ -95,7 +99,18 @@ export const BoardRowsInput = inputObjectType({
   definition(t) {
     t.nonNull.list.nonNull.list.nonNull.string('data')
   },
-  description: "A subset of rows from the whole GOL board where generate new cells"
+  description: "A subset of rows, or the complete rows from the GOL board for one generate."
+});
+
+export const BoardOutput = objectType({
+  name: 'BoardOutput',
+  definition(t) {
+    t.nonNull.string('genId')
+    t.nonNull.int('rows')
+    t.nonNull.int('cols')
+    t.nonNull.list.nonNull.list.nonNull.string('board')
+  },
+  description: "A subset of rows, or the complete rows from the GOL board for one generate."
 });
 
 export const GOLQuery = extendType({
@@ -111,6 +126,13 @@ export const GOLQuery = extendType({
         genId: nonNull(stringArg())
       },
       resolve: getTaskResultByGenIDResolver
+    });
+    t.field('countTaskResultByGenID', {
+      type: 'Int',
+      args: {
+        genId: nonNull(stringArg())
+      },
+      resolve: countTaskResultByGenIDResolver
     });
   },
 });
@@ -179,56 +201,32 @@ export const GOLMutations = extendType({
       },
       resolve: removeTaskCompleteResolver
     });
+    t.nonNull.field('postBoardByGenID', {
+      type: 'BoardOutput',
+      args: {
+        genId: nonNull(stringArg()),
+        rows: nonNull(intArg()),
+        cols: nonNull(intArg()),
+        board: nonNull(BoardRowsInput)
+      },
+      resolve: postBoardByGenIDResolver
+    });
+
   },
 })
 
-// export const Subscription = extendType({
-//   type: "Subscription",
-//   definition(t) {
-//     t.field(Subjects.ClientCSConnected, {
-//       type: 'ConnectedClient',
-//       args: {
-//         sourceIp: nonNull(stringArg())
-//       },
-//       subscribe: withFilter(
-//         (_root, _args, ctx) => ctx.pubsub.asyncIterator(Subjects.ClientCSConnected),
-//         (clientConnect: ClientCSConnectedEvent, variables) => {
-//           return (
-//             clientConnect.data.sourceIp === variables.sourceIp
-//           );
-//         }),
-//       resolve: subcribeConnectedCSResolver
-//     });
-//     t.field(Subjects.ClientCSDisconnected, {
-//       type: 'DisconnectedClient',
-//       args: {
-//         sourceIp: nonNull(stringArg())
-//       },
-//       subscribe: withFilter(
-//         (_root, _args, ctx) => ctx.pubsub.asyncIterator(Subjects.ClientCSDisconnected),
-//         (clientDisconnect: ClientCSDisconnectedEvent, variables) => {
-//           return (
-//             clientDisconnect.data.sourceIp === variables.sourceIp
-//           );
-//         }),
-//       resolve: subcribeDisconnectedCSResolver
-//     });
-//     t.field(Subjects.RequestCSCreated, {
-//       type: 'RequestCS',
-//       subscribe(_root, _args, ctx) {
-//         return ctx.pubsub.asyncIterator(Subjects.RequestCSCreated)
-//       },
-//       resolve: subcribeRequestCSResolver
-//     });
-//     t.field(Subjects.AcquireCSCreated, {
-//       type: 'AcquireCS',
-//       subscribe(_root, _args, ctx) {
-//         return ctx.pubsub.asyncIterator(Subjects.AcquireCSCreated)
-//       },
-//       resolve: subcribeAcquireCSResolver
-//     });
+export const Subscription = extendType({
+  type: "Subscription",
+  definition(t) {
+    t.field(Subjects.BoardByGeneration, {
+      type: 'BoardOutput',
+      subscribe(_root, _args, ctx) {
+        return ctx.pubsub.asyncIterator(Subjects.BoardByGeneration)
+      },
+      resolve: subcribeBoardGenerateResolver
+    });
 
-//   },
-// });
+  },
+});
 
 

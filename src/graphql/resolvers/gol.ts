@@ -1,5 +1,7 @@
 import { FieldResolver } from "nexus";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { BoardByGenerationEvent } from "../../events/boardByGenerationEvent";
+import { Subjects } from "../../events";
 
 /**
  * Task Manager role granted
@@ -139,6 +141,26 @@ export const getTaskResultByGenIDResolver: FieldResolver<
   };
 };
 
+export const countTaskResultByGenIDResolver: FieldResolver<
+  "Query",
+  "countTaskResultByGenID"
+> = async (_, { genId }, { prisma }) => {
+
+  try {
+    const taskResult = await prisma.taskResult.findMany({
+      where:
+      {
+        genId: genId.toString()
+      }
+    });
+
+    return taskResult.length;
+
+  } catch (error) {
+    return 0;
+  };
+};
+
 export const postTaskResolver: FieldResolver<
   "Mutation", "postTask"
 > = async (_, { genId, row, length, rows }, { prisma, pubsub }) => {
@@ -265,116 +287,25 @@ export const signoutTMRoleResolver: FieldResolver<
   }
 };
 
-// export const connectClientCSResolver: FieldResolver<
-//   "Mutation", "connectClientCS"
-// > = async (_, { sourceIp, processId }, { prisma, pubsub }) => {
+export const postBoardByGenIDResolver: FieldResolver<
+  "Mutation", "postBoardByGenID"
+> = async (_, { genId, rows, cols, board }, { pubsub }) => {
 
-//   const connectedAt = new Date().toISOString();
-//   await prisma.client.update({
-//     where: {
-//       ip: sourceIp
-//     },
-//     data: {
-//       ip: sourceIp,
-//       connected: true,
-//       connectedAt: connectedAt,
-//       processId
-//     }
-//   });
+  const boardOutput = board.data.map((cols, index) => {
+    return cols;
+  });
 
+  pubsub && pubsub.publish(Subjects.BoardByGeneration,
+    {
+      subject: Subjects.BoardByGeneration,
+      data: { genId, rows, cols, board: boardOutput }
+    } as BoardByGenerationEvent);
 
-//   pubsub && pubsub.publish(Subjects.ClientCSConnected,
-//     {
-//       subject: Subjects.ClientCSConnected,
-//       data: { sourceIp, connectedAt, processId }
-//     } as ClientCSConnectedEvent);
+  return { genId, rows, cols, board: boardOutput }
+};
 
-//   return { sourceIp, connectedAt, processId }
-// };
-
-// export const disconnectClientCSResolver: FieldResolver<
-//   "Mutation", "disconnectClientCS"
-// > = async (_, { sourceIp }, { prisma, pubsub }) => {
-
-//   const disconnectedAt = new Date().toISOString();
-//   await prisma.client.update({
-//     where: {
-//       ip: sourceIp
-//     },
-//     data: {
-//       ip: sourceIp,
-//       connected: false,
-//       processId: null,
-//       disconnectedAt: disconnectedAt
-//     }
-//   });
-
-
-//   pubsub && pubsub.publish(Subjects.ClientCSDisconnected,
-//     {
-//       subject: Subjects.ClientCSDisconnected,
-//       data: { sourceIp, disconnectedAt }
-//     } as ClientCSDisconnectedEvent);
-
-//   return { sourceIp, disconnectedAt }
-// };
-
-// export const createRequestCSResolver: FieldResolver<
-//   "Mutation", "createRequestCS"
-// > = async (_, { sourceIp, originalIp, parentIp, relayed }, { pubsub }) => {
-//   const requestedAt = new Date().toISOString();
-
-//   pubsub && pubsub.publish(Subjects.RequestCSCreated,
-//     {
-//       subject: Subjects.RequestCSCreated,
-//       data: { sourceIp, originalIp, parentIp, requestedAt, relayed }
-//     } as RequestCSCreatedEvent);
-
-//   return { sourceIp, originalIp, parentIp, requestedAt, relayed }
-// };
-
-
-// export const createAcquireCSResolver: FieldResolver<
-//   "Mutation", "createAcquireCS"
-// > = async (_, { ip, sourceIp }, { pubsub }) => {
-//   const acquiredAt = new Date().toISOString();
-
-//   pubsub && pubsub.publish(Subjects.AcquireCSCreated,
-//     {
-//       subject: Subjects.AcquireCSCreated,
-//       data: { ip, sourceIp, acquiredAt }
-//     } as AcquireCSCreatedEvent);
-
-//   return { ip, sourceIp, acquiredAt }
-// };
-
-// export const subcribeConnectedCSResolver = (payload: ClientCSConnectedEvent) => {
-//   const { sourceIp, processId, connectedAt } = payload.data;
-//   return { sourceIp, processId, connectedAt };
-// };
-
-// export const subcribeDisconnectedCSResolver = (payload: ClientCSDisconnectedEvent) => {
-//   const { sourceIp, disconnectedAt } = payload.data;
-//   return { sourceIp, disconnectedAt };
-// };
-
-// export const subcribeRequestCSResolver = (payload: RequestCSCreatedEvent) => {
-//   const { data: requestCS } = payload;
-//   return {
-//     sourceIp: requestCS.sourceIp,
-//     originalIp: requestCS.originalIp,
-//     parentIp: requestCS.parentIp,
-//     requestedAt: requestCS.requestedAt,
-//     relayed: requestCS.relayed
-//   };
-// };
-
-// export const subcribeAcquireCSResolver = (payload: AcquireCSCreatedEvent) => {
-//   const { data: acquireCS } = payload;
-//   return {
-//     ip: acquireCS.ip,
-//     sourceIp: acquireCS.sourceIp,
-//     acquiredAt: acquireCS.acquiredAt
-//   };
-// };
+export const subcribeBoardGenerateResolver = (payload: BoardByGenerationEvent) => {
+  const { data: { genId, rows, cols, board } } = payload;
+  return { genId, rows, cols, board };
+};
 
