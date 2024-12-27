@@ -17,7 +17,7 @@ The GOL service is made to be used in a Web application to display the board pla
 
 Make docker image in project root folder with: 
 ```
-docker build -t gol-dev:v1.0 -f Dockerfile .
+docker build -t gol-dev:v1.0 -f Dockerfile.dev .
 ```
 
 The docker compose can run the docker image gol-dev:v1.0.

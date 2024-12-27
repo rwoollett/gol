@@ -21,6 +21,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run generate
 
-EXPOSE 3002
+EXPOSE 3005
 CMD ["npm", "run", "dev"]
 
