@@ -248,7 +248,7 @@ export const removeTaskCompleteResolver: FieldResolver<
     }
   });
 
-  return { message: `Removed ${removeMany.count + removeManyResult.count} records succesfully` };
+  return { message: `Removed ${removeMany.count + removeManyResult.count} records successfully` };
 };
 
 export const signinTMRoleResolver: FieldResolver<
