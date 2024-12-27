@@ -9,7 +9,8 @@
     "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
     "generate:prisma": "prisma generate",
     "generate:nexus": "ts-node --transpile-only src/graphql/schema.ts",
-    "test": "npm run generate:nexus && jest"
+    "test": "npm run generate:nexus && jest",
+    "seeddocker": "ts-node ./src/prisma/seed_docker.ts"
   },
   "keywords": [
     "apollo",
