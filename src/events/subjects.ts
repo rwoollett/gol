@@ -1,3 +1,3 @@
 export enum Subjects {
-  BoardByGeneration = 'board_generation',
+  BoardByGeneration = 'board_Generation',
 }

@@ -56,7 +56,7 @@ type RemovalResult {
 }
 
 type Subscription {
-  board_generation: BoardOutput
+  board_Generation: BoardOutput
 }
 
 """Task of generating new cells in a subset of rows in GOL."""

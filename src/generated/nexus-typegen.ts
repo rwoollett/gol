@@ -124,7 +124,7 @@ export interface NexusGenFieldTypes {
     message: string; // String!
   }
   Subscription: { // field return type
-    board_generation: NexusGenRootTypes['BoardOutput'] | null; // BoardOutput
+    board_Generation: NexusGenRootTypes['BoardOutput'] | null; // BoardOutput
   }
   Task: { // field return type
     allocated: boolean; // Boolean!
@@ -185,7 +185,7 @@ export interface NexusGenFieldTypeNames {
     message: 'String'
   }
   Subscription: { // field return type name
-    board_generation: 'BoardOutput'
+    board_Generation: 'BoardOutput'
   }
   Task: { // field return type name
     allocated: 'Boolean'
