@@ -7,6 +7,7 @@ import { Subjects } from "../../events";
  * Task Manager role granted
  */
 let TMRole = false;
+const TASK_NEXT_TAKE = 4;
 
 /**
  * Get Task by generation id (genId)
@@ -25,7 +26,7 @@ export const getNextTaskResolver: FieldResolver<
 > = async (_, { }, { prisma }) => {
 
   try {
-    const task = await prisma.task.findFirst({
+    const nextTasks = await prisma.task.findMany({
       select: {
         id: true,
         genId: true,
@@ -52,21 +53,25 @@ export const getNextTaskResolver: FieldResolver<
         {
           row: 'asc'
         }
-      ]
+      ],
+      take: TASK_NEXT_TAKE
     });
 
-    if (task) {
-      await prisma.task.update({
+    if (nextTasks) {
+      const taskIds = nextTasks.map(task => task.id);
+      await prisma.task.updateMany({
         data: {
           allocated: true
         },
         where: {
-          id: task.id,
+          id: {
+            in: taskIds
+          }
         }
       });
     }
 
-    return task;
+    return nextTasks;
 
   } catch (error) {
     if (
@@ -82,7 +87,7 @@ export const getNextTaskResolver: FieldResolver<
         '\u001b[0m'
       );
     }
-    return null;
+    return [];
   };
 };
 

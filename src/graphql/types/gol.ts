@@ -20,6 +20,7 @@ import {
   subcribeBoardGenerateResolver
 } from '../resolvers/gol';
 import { Subjects } from '../../events';
+import { NexusListDef } from 'nexus/dist/core';
 // import {
 //   ClientCSConnectedEvent,
 //   ClientCSDisconnectedEvent,
@@ -117,7 +118,7 @@ export const GOLQuery = extendType({
   type: 'Query',
   definition(t) {
     t.field('getNextTask', {
-      type: 'Task',
+      type: list('Task'),
       args: {
         nodeId: nonNull(stringArg()),
       },

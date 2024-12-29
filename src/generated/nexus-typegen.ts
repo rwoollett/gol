@@ -117,7 +117,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     countTaskResultByGenID: number | null; // Int
-    getNextTask: NexusGenRootTypes['Task'] | null; // Task
+    getNextTask: Array<NexusGenRootTypes['Task'] | null> | null; // [Task]
     getTaskResultByGenID: Array<NexusGenRootTypes['TaskResult'] | null> | null; // [TaskResult]
   }
   RemovalResult: { // field return type

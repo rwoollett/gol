@@ -46,7 +46,7 @@ type Mutation {
 
 type Query {
   countTaskResultByGenID(genId: Int!): Int
-  getNextTask(nodeId: String!): Task
+  getNextTask(nodeId: String!): [Task]
   getTaskResultByGenID(genId: Int!): [TaskResult]
 }
 
