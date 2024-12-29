@@ -5,3 +5,13 @@ node_modules
 dist/
 coverage/
 docker-compose.yml
+scratch.txt
+IntrospectionQuery.json
+IntrospectionQuery.graphql
+GOLService.hpp
+Dockerfile
+Dockerfile.dev
+api.http
+.env
+.env.local
+gol.env
