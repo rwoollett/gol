@@ -118,6 +118,9 @@ export const GOLQuery = extendType({
   definition(t) {
     t.field('getNextTask', {
       type: 'Task',
+      args: {
+        nodeId: nonNull(stringArg()),
+      },
       resolve: getNextTaskResolver
     });
     t.field('getTaskResultByGenID', {

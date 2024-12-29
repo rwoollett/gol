@@ -245,6 +245,9 @@ export interface NexusGenArgTypes {
     countTaskResultByGenID: { // args
       genId: number; // Int!
     }
+    getNextTask: { // args
+      nodeId: string; // String!
+    }
     getTaskResultByGenID: { // args
       genId: number; // Int!
     }
