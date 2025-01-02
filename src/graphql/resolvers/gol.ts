@@ -2,6 +2,7 @@ import { FieldResolver } from "nexus";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { BoardByGenerationEvent } from "../../events/boardByGenerationEvent";
 import { Subjects } from "../../events";
+import { updateLanguageServiceSourceFile } from "typescript";
 
 /**
  * Task Manager role granted
@@ -26,7 +27,7 @@ export const getNextTaskResolver: FieldResolver<
 > = async (_, { }, { prisma }) => {
 
   try {
-    const nextTasks = await prisma.task.findMany({
+    const task = await prisma.task.findFirst({
       select: {
         id: true,
         genId: true,
@@ -54,24 +55,38 @@ export const getNextTaskResolver: FieldResolver<
           row: 'asc'
         }
       ],
-      take: TASK_NEXT_TAKE
+      //take: TASK_NEXT_TAKE
     });
 
-    if (nextTasks) {
-      const taskIds = nextTasks.map(task => task.id);
-      await prisma.task.updateMany({
+    if (task) {
+      //const taskIds = nextTasks.map(task => task.id);
+      const updateTask = await prisma.task.update({
+        select: {
+          id: true,
+          genId: true,
+          row: true,
+          length: true,
+          allocated: true,
+          rows: {
+            select: {
+              id: true,
+              order: true,
+              taskId: true,
+              cols: true
+            }
+          }
+        },
         data: {
           allocated: true
         },
         where: {
-          id: {
-            in: taskIds
-          }
+          id: task.id
         }
       });
+      return [updateTask];
+    } else {
+      return [];
     }
-
-    return nextTasks;
 
   } catch (error) {
     if (
