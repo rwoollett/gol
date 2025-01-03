@@ -80,6 +80,8 @@ function start() {
 
   server.start().then(() => {
     console.log('setting /grapghql');
+    app.use(express.json({ limit: '25mb' }));
+    app.use(express.urlencoded({ limit: '25mb' }));
     app.use('/graphql',
       cors<cors.CorsRequest>(),
       bodyParser.json(),
@@ -105,7 +107,7 @@ function start() {
     mainServer.close(async () => {
       console.log('Closing Http Server');
     });
-    
+
   };
 
   process.on('SIGINT', graceFully);
